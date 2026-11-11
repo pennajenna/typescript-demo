@@ -12,3 +12,12 @@ export function calculateTotal (
         0
     );
 }
+
+export function calculateQuantity (
+    items: OrderItem[]
+): number {
+    return items.reduce(
+        (total, item) => total + item.quantity, 
+        0
+    );
+}

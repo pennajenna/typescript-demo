@@ -1,4 +1,4 @@
-import { calculateTotal } from "./order.js";
+import { calculateTotal, calculateQuantity } from "./order.js";
 import type { OrderItem } from "./order.js";
 
 
@@ -9,4 +9,6 @@ const items: OrderItem[] = [
 ];
 
 const total = calculateTotal(items);
+const quantity = calculateQuantity(items);
 console.log(`Total Order Amount: $${total.toFixed(2)}`);
+console.log(`Total Items: ${quantity}`);
