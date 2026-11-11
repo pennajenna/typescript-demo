@@ -44,10 +44,6 @@ const websiteConfig: WebsiteConfig = {
   ],
 };
 
-const headingInput = document.querySelector<HTMLInputElement>(
-  '#headingInput'
-);
-
 const backgroundColorInput = document.querySelector<HTMLInputElement>(
   '#backgroundColorInput'
 );
@@ -112,17 +108,6 @@ function renderWebsite(config: WebsiteConfig): void {
 
   });
 }
-
-headingInput?.addEventListener('input', () => {
-  const heading = websiteConfig.components.find(
-    (component) => component.type === 'heading'
-  );
-
-  if (heading) {
-    heading.text = headingInput.value;
-    renderWebsite(websiteConfig);
-  }
-});
 
 backgroundColorInput?.addEventListener('input', () => {
   websiteConfig.backgroundColor = backgroundColorInput.value;
