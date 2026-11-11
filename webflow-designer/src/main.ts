@@ -206,5 +206,124 @@ deleteButton?.addEventListener('click', () => {
   renderWebsite(websiteConfig);
 });
 
+const saveButton = document.querySelector<HTMLButtonElement>(
+  '#saveButton'
+);
+
+const loadButton = document.querySelector<HTMLButtonElement>(
+  '#loadButton'
+);
+
+const saveStatus = document.querySelector<HTMLParagraphElement>(
+  '#saveStatus'
+);
+
+const STORAGE_KEY = 'mini-webflow-design';
+
+// Save the current configuration
+function saveDesign(): void {
+  try {
+    const json = JSON.stringify(websiteConfig);
+
+    localStorage.setItem(STORAGE_KEY, json);
+
+    if (saveStatus) {
+      saveStatus.textContent = 'Design saved successfully!';
+    }
+  } catch {
+    if (saveStatus) {
+      saveStatus.textContent = 'Unable to save design.';
+    }
+  }
+}
+
+function isWebsiteConfig(value: unknown): value is WebsiteConfig {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  if (!('backgroundColor' in value) ||
+    typeof value.backgroundColor !== 'string') {
+    return false;
+  }
+
+  if (!('components' in value) ||
+    !Array.isArray(value.components)) {
+    return false;
+  }
+
+  return value.components.every((component: unknown) => {
+    if (typeof component !== 'object' || component === null) {
+      return false;
+    }
+
+    if (!('id' in component) ||
+      typeof component.id !== 'string') {
+      return false;
+    }
+
+    if (!('text' in component) ||
+      typeof component.text !== 'string') {
+      return false;
+    }
+
+    if (!('type' in component)) {
+      return false;
+    }
+
+    return (
+      component.type === 'heading' ||
+      component.type === 'paragraph' ||
+      component.type === 'button'
+    );
+  });
+}
+
+// Load a previously saved configuration
+function loadDesign(): void {
+  try {
+    const savedJson = localStorage.getItem(STORAGE_KEY);
+
+    if (!savedJson) {
+      if (saveStatus) {
+        saveStatus.textContent = 'No saved design found.';
+      }
+      return;
+    }
+
+    const savedConfig: unknown = JSON.parse(savedJson);
+
+    if (!isWebsiteConfig(savedConfig)) {
+      throw new Error('Invalid saved configuration');
+    }
+
+    websiteConfig.backgroundColor = savedConfig.backgroundColor;
+    websiteConfig.components = savedConfig.components;
+
+    selectedComponentId = null;
+
+    if (componentEditor) {
+      componentEditor.hidden = true;
+    }
+
+    if (backgroundColorInput) {
+      backgroundColorInput.value = websiteConfig.backgroundColor;
+    }
+
+    renderWebsite(websiteConfig);
+
+    if (saveStatus) {
+      saveStatus.textContent = 'Design loaded successfully!';
+    }
+  } catch {
+    if (saveStatus) {
+      saveStatus.textContent = 'Unable to load design.';
+    }
+  }
+}
+
+saveButton?.addEventListener('click', saveDesign);
+loadButton?.addEventListener('click', loadDesign);
+
 
 renderWebsite(websiteConfig);
