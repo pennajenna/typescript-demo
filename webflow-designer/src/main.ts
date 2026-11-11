@@ -1,17 +1,21 @@
 
 type WebsiteComponent =
   | {
+    id: string;
     type: 'heading';
     text: string;
   }
   | {
+    id: string;
     type: 'paragraph';
     text: string;
   }
   | {
+    id: string;
     type: 'button';
     text: string;
   };
+
 
 interface WebsiteConfig {
   backgroundColor: string;
@@ -20,10 +24,23 @@ interface WebsiteConfig {
 
 const websiteConfig: WebsiteConfig = {
   backgroundColor: '#ffffff',
+
   components: [
-    { type: 'heading', text: 'Welcome to my website' },
-    { type: 'paragraph', text: 'Built with TypeScript!' },
-    { type: 'button', text: 'Learn More' },
+    {
+      id: 'heading-1',
+      type: 'heading',
+      text: 'Welcome to my website',
+    },
+    {
+      id: 'paragraph-1',
+      type: 'paragraph',
+      text: 'Built with TypeScript!',
+    },
+    {
+      id: 'button-1',
+      type: 'button',
+      text: 'Learn More',
+    },
   ],
 };
 
@@ -78,6 +95,24 @@ headingInput?.addEventListener('input', () => {
 
 backgroundColorInput?.addEventListener('input', () => {
   websiteConfig.backgroundColor = backgroundColorInput.value;
+  renderWebsite(websiteConfig);
+});
+
+
+const addParagraphButton =
+  document.querySelector<HTMLButtonElement>(
+    '#addParagraphButton'
+  );
+
+addParagraphButton?.addEventListener('click', () => {
+  const newParagraph: WebsiteComponent = {
+    id: crypto.randomUUID(),
+    type: 'paragraph',
+    text: 'This is a new paragraph.',
+  };
+
+  websiteConfig.components.push(newParagraph);
+
   renderWebsite(websiteConfig);
 });
 
