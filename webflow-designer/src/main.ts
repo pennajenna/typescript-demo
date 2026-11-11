@@ -148,4 +148,63 @@ componentTextInput?.addEventListener('input', () => {
 });
 
 
+const moveUpButton = document.querySelector<HTMLButtonElement>(
+  '#moveUpButton'
+);
+
+const moveDownButton = document.querySelector<HTMLButtonElement>(
+  '#moveDownButton'
+);
+
+const deleteButton = document.querySelector<HTMLButtonElement>(
+  '#deleteButton'
+);
+
+// Move a component within the array
+function moveComponent(direction: -1 | 1): void {
+  const index = websiteConfig.components.findIndex(
+    (component) => component.id === selectedComponentId
+  );
+
+  if (index === -1) return;
+
+  const newIndex = index + direction;
+
+  if (
+    newIndex < 0 ||
+    newIndex >= websiteConfig.components.length
+  ) {
+    return;
+  }
+
+  const [component] = websiteConfig.components.splice(index, 1);
+
+  websiteConfig.components.splice(newIndex, 0, component);
+
+  renderWebsite(websiteConfig);
+}
+
+moveUpButton?.addEventListener('click', () => {
+  moveComponent(-1);
+});
+
+moveDownButton?.addEventListener('click', () => {
+  moveComponent(1);
+});
+
+deleteButton?.addEventListener('click', () => {
+  websiteConfig.components = websiteConfig.components.filter(
+    (component) => component.id !== selectedComponentId
+  );
+
+  selectedComponentId = null;
+
+  if (componentEditor) {
+    componentEditor.hidden = true;
+  }
+
+  renderWebsite(websiteConfig);
+});
+
+
 renderWebsite(websiteConfig);
