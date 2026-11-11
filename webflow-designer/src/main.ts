@@ -1,32 +1,15 @@
 
-
 import type {
   WebsiteComponent,
   WebsiteConfig,
 } from './types';
 
 
-const websiteConfig: WebsiteConfig = {
-  backgroundColor: '#ffffff',
-
-  components: [
-    {
-      id: 'heading-1',
-      type: 'heading',
-      text: 'Welcome to my website',
-    },
-    {
-      id: 'paragraph-1',
-      type: 'paragraph',
-      text: 'Built with TypeScript!',
-    },
-    {
-      id: 'button-1',
-      type: 'button',
-      text: 'Learn More',
-    },
-  ],
-};
+import {
+  websiteConfig,
+  getSelectedComponentId,
+  setSelectedComponentId,
+} from './state';
 
 const backgroundColorInput = document.querySelector<HTMLInputElement>(
   '#backgroundColorInput'
@@ -40,9 +23,6 @@ const componentEditor = document.querySelector<HTMLDivElement>(
 const componentTextInput = document.querySelector<HTMLInputElement>(
   '#componentTextInput'
 );
-
-
-let selectedComponentId: string | null = null;
 
 const preview = document.querySelector<HTMLDivElement>('#preview');
 
@@ -73,12 +53,12 @@ function renderWebsite(config: WebsiteConfig): void {
     element.textContent = component.text;
     element.dataset.componentId = component.id;
 
-    if (component.id === selectedComponentId) {
+    if (component.id === getSelectedComponentId()) {
       element.classList.add('selected-component');
     }
 
     element.addEventListener('click', () => {
-      selectedComponentId = component.id;
+      setSelectedComponentId(component.id);
 
       if (componentEditor && componentTextInput) {
         componentEditor.hidden = false;
@@ -119,7 +99,7 @@ addParagraphButton?.addEventListener('click', () => {
 
 componentTextInput?.addEventListener('input', () => {
   const selectedComponent = websiteConfig.components.find(
-    (component) => component.id === selectedComponentId
+    (component) => component.id === getSelectedComponentId()
   );
 
   if (!selectedComponent) {
@@ -147,7 +127,7 @@ const deleteButton = document.querySelector<HTMLButtonElement>(
 // Move a component within the array
 function moveComponent(direction: -1 | 1): void {
   const index = websiteConfig.components.findIndex(
-    (component) => component.id === selectedComponentId
+    (component) => component.id === getSelectedComponentId()
   );
 
   if (index === -1) return;
@@ -178,10 +158,10 @@ moveDownButton?.addEventListener('click', () => {
 
 deleteButton?.addEventListener('click', () => {
   websiteConfig.components = websiteConfig.components.filter(
-    (component) => component.id !== selectedComponentId
+    (component) => component.id !== getSelectedComponentId()
   );
 
-  selectedComponentId = null;
+  setSelectedComponentId(null);
 
   if (componentEditor) {
     componentEditor.hidden = true;
@@ -284,7 +264,7 @@ function loadDesign(): void {
     websiteConfig.backgroundColor = savedConfig.backgroundColor;
     websiteConfig.components = savedConfig.components;
 
-    selectedComponentId = null;
+    setSelectedComponentId(null);
 
     if (componentEditor) {
       componentEditor.hidden = true;
