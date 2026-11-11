@@ -1,15 +1,32 @@
 
+type WebsiteComponent =
+  | {
+      type: 'heading';
+      text: string;
+    }
+  | {
+      type: 'paragraph';
+      text: string;
+    }
+  | {
+      type: 'button';
+      text: string;
+    };
+
 interface WebsiteConfig {
-  heading: string;
   backgroundColor: string;
+  components: WebsiteComponent[];
 }
 
 const websiteConfig: WebsiteConfig = {
-  heading: 'Welcome to my website',
   backgroundColor: '#ffffff',
+  components: [
+    { type: 'heading', text: 'Welcome to my website' },
+    { type: 'paragraph', text: 'Built with TypeScript!' },
+    { type: 'button', text: 'Learn More' },
+  ],
 };
 
-// Get references to our HTML elements
 const headingInput = document.querySelector<HTMLInputElement>(
   '#headingInput'
 );
@@ -18,32 +35,45 @@ const backgroundColorInput = document.querySelector<HTMLInputElement>(
   '#backgroundColorInput'
 );
 
-const updateButton = document.querySelector<HTMLButtonElement>(
-  '#updateButton'
-);
+const preview = document.querySelector<HTMLDivElement>('#preview');
 
-const previewHeading = document.querySelector<HTMLHeadingElement>(
-  '#previewHeading'
-);
-
-const preview = document.querySelector<HTMLDivElement>(
-  '#preview'
-);
-
-// Update the page using our configuration
 function renderWebsite(config: WebsiteConfig): void {
-  if (!previewHeading || !preview) {
-    return;
-  }
+  if (!preview) return;
 
-  previewHeading.textContent = config.heading;
+  preview.replaceChildren();
   preview.style.backgroundColor = config.backgroundColor;
+
+  config.components.forEach((component) => {
+    let element: HTMLElement;
+
+    switch (component.type) {
+      case 'heading':
+        element = document.createElement('h1');
+        break;
+
+      case 'paragraph':
+        element = document.createElement('p');
+        break;
+
+      case 'button':
+        element = document.createElement('button');
+        break;
+    }
+
+    element.textContent = component.text;
+    preview.appendChild(element);
+  });
 }
 
-// Handle button clicks
 headingInput?.addEventListener('input', () => {
-  websiteConfig.heading = headingInput.value;
-  renderWebsite(websiteConfig);
+  const heading = websiteConfig.components.find(
+    (component) => component.type === 'heading'
+  );
+
+  if (heading) {
+    heading.text = headingInput.value;
+    renderWebsite(websiteConfig);
+  }
 });
 
 backgroundColorInput?.addEventListener('input', () => {
@@ -51,6 +81,4 @@ backgroundColorInput?.addEventListener('input', () => {
   renderWebsite(websiteConfig);
 });
 
-
-// Render the initial configuration
 renderWebsite(websiteConfig);
