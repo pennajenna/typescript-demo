@@ -1,6 +1,21 @@
 
+interface WebsiteConfig {
+  heading: string;
+  backgroundColor: string;
+}
+
+const websiteConfig: WebsiteConfig = {
+  heading: 'Welcome to my website',
+  backgroundColor: '#ffffff',
+};
+
+// Get references to our HTML elements
 const headingInput = document.querySelector<HTMLInputElement>(
   '#headingInput'
+);
+
+const backgroundColorInput = document.querySelector<HTMLInputElement>(
+  '#backgroundColorInput'
 );
 
 const updateButton = document.querySelector<HTMLButtonElement>(
@@ -11,8 +26,31 @@ const previewHeading = document.querySelector<HTMLHeadingElement>(
   '#previewHeading'
 );
 
-updateButton?.addEventListener('click', () => {
-  if (headingInput && previewHeading) {
-    previewHeading.textContent = headingInput.value;
+const preview = document.querySelector<HTMLDivElement>(
+  '#preview'
+);
+
+// Update the page using our configuration
+function renderWebsite(config: WebsiteConfig): void {
+  if (!previewHeading || !preview) {
+    return;
   }
+
+  previewHeading.textContent = config.heading;
+  preview.style.backgroundColor = config.backgroundColor;
+}
+
+// Handle button clicks
+updateButton?.addEventListener('click', () => {
+  if (!headingInput || !backgroundColorInput) {
+    return;
+  }
+
+  websiteConfig.heading = headingInput.value;
+  websiteConfig.backgroundColor = backgroundColorInput.value;
+
+  renderWebsite(websiteConfig);
 });
+
+// Render the initial configuration
+renderWebsite(websiteConfig);

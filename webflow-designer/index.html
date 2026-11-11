@@ -1,34 +1,37 @@
-
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mini Webflow Designer</title>
-  </head>
-  <body>
-    <h1>Mini Website Designer</h1>
 
-    <section>
-      <h2>Editor</h2>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Webflow Designer</title>
+</head>
 
-      <label for="headingInput">Page heading:</label>
-      <input
-        id="headingInput"
-        type="text"
-        value="Welcome to my website"
-      />
+<body>
+  <h1>Mini Website Designer</h1>
 
-      <button id="updateButton">Update Preview</button>
-    </section>
+  <section>
+    <h2>Editor</h2>
 
-    <section>
-      <h2>Live Preview</h2>
-      <div id="preview">
-        <h1 id="previewHeading">Welcome to my website</h1>
-      </div>
-    </section>
+    <label for="headingInput">Page heading:</label>
+    <input id="headingInput" type="text" value="Welcome to my website" />
 
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+    <label for="backgroundColorInput">Background color:</label>
+    <input id="backgroundColorInput" type="color" value="#ffffff" />
+
+
+    <button id="updateButton">Update Preview</button>
+  </section>
+
+  <section>
+    <h2>Live Preview</h2>
+    <div id="preview">
+      <h1 id="previewHeading">Welcome to my website</h1>
+    </div>
+  </section>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
