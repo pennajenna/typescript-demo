@@ -41,16 +41,16 @@ function renderWebsite(config: WebsiteConfig): void {
 }
 
 // Handle button clicks
-updateButton?.addEventListener('click', () => {
-  if (!headingInput || !backgroundColorInput) {
-    return;
-  }
-
+headingInput?.addEventListener('input', () => {
   websiteConfig.heading = headingInput.value;
-  websiteConfig.backgroundColor = backgroundColorInput.value;
-
   renderWebsite(websiteConfig);
 });
+
+backgroundColorInput?.addEventListener('input', () => {
+  websiteConfig.backgroundColor = backgroundColorInput.value;
+  renderWebsite(websiteConfig);
+});
+
 
 // Render the initial configuration
 renderWebsite(websiteConfig);
