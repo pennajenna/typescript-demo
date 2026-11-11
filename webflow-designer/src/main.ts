@@ -1,26 +1,10 @@
 
-type WebsiteComponent =
-  | {
-    id: string;
-    type: 'heading';
-    text: string;
-  }
-  | {
-    id: string;
-    type: 'paragraph';
-    text: string;
-  }
-  | {
-    id: string;
-    type: 'button';
-    text: string;
-  };
 
+import type {
+  WebsiteComponent,
+  WebsiteConfig,
+} from './types';
 
-interface WebsiteConfig {
-  backgroundColor: string;
-  components: WebsiteComponent[];
-}
 
 const websiteConfig: WebsiteConfig = {
   backgroundColor: '#ffffff',
