@@ -1,17 +1,17 @@
 
 type WebsiteComponent =
   | {
-      type: 'heading';
-      text: string;
-    }
+    type: 'heading';
+    text: string;
+  }
   | {
-      type: 'paragraph';
-      text: string;
-    }
+    type: 'paragraph';
+    text: string;
+  }
   | {
-      type: 'button';
-      text: string;
-    };
+    type: 'button';
+    text: string;
+  };
 
 interface WebsiteConfig {
   backgroundColor: string;
