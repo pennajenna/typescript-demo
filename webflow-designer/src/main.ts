@@ -52,6 +52,18 @@ const backgroundColorInput = document.querySelector<HTMLInputElement>(
   '#backgroundColorInput'
 );
 
+
+const componentEditor = document.querySelector<HTMLDivElement>(
+  '#componentEditor'
+);
+
+const componentTextInput = document.querySelector<HTMLInputElement>(
+  '#componentTextInput'
+);
+
+
+let selectedComponentId: string | null = null;
+
 const preview = document.querySelector<HTMLDivElement>('#preview');
 
 function renderWebsite(config: WebsiteConfig): void {
@@ -77,8 +89,27 @@ function renderWebsite(config: WebsiteConfig): void {
         break;
     }
 
+
     element.textContent = component.text;
+    element.dataset.componentId = component.id;
+
+    if (component.id === selectedComponentId) {
+      element.classList.add('selected-component');
+    }
+
+    element.addEventListener('click', () => {
+      selectedComponentId = component.id;
+
+      if (componentEditor && componentTextInput) {
+        componentEditor.hidden = false;
+        componentTextInput.value = component.text;
+      }
+
+      renderWebsite(websiteConfig);
+    });
+
     preview.appendChild(element);
+
   });
 }
 
@@ -115,5 +146,21 @@ addParagraphButton?.addEventListener('click', () => {
 
   renderWebsite(websiteConfig);
 });
+
+
+componentTextInput?.addEventListener('input', () => {
+  const selectedComponent = websiteConfig.components.find(
+    (component) => component.id === selectedComponentId
+  );
+
+  if (!selectedComponent) {
+    return;
+  }
+
+  selectedComponent.text = componentTextInput.value;
+
+  renderWebsite(websiteConfig);
+});
+
 
 renderWebsite(websiteConfig);
