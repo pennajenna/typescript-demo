@@ -1,9 +1,5 @@
 
-import type {
-  WebsiteComponent,
-  WebsiteConfig,
-} from './types';
-
+import type { WebsiteComponent } from './types';
 
 import {
   websiteConfig,
@@ -12,27 +8,60 @@ import {
 } from './state';
 
 import { renderWebsite } from './renderer';
+import { saveDesign, loadDesign } from './storage';
 
-import {
-  saveDesign,
-  loadDesign,
-} from './storage';
+// DOM references
+const backgroundColorInput =
+  document.querySelector<HTMLInputElement>(
+    '#backgroundColorInput'
+  );
 
+const addParagraphButton =
+  document.querySelector<HTMLButtonElement>(
+    '#addParagraphButton'
+  );
 
-const backgroundColorInput = document.querySelector<HTMLInputElement>(
-  '#backgroundColorInput'
-);
+const componentEditor =
+  document.querySelector<HTMLDivElement>(
+    '#componentEditor'
+  );
 
-const componentEditor = document.querySelector<HTMLDivElement>(
-  '#componentEditor'
-);
+const componentTextInput =
+  document.querySelector<HTMLInputElement>(
+    '#componentTextInput'
+  );
 
-const componentTextInput = document.querySelector<HTMLInputElement>(
-  '#componentTextInput'
-);
+const moveUpButton =
+  document.querySelector<HTMLButtonElement>(
+    '#moveUpButton'
+  );
 
-const preview = document.querySelector<HTMLDivElement>('#preview');
+const moveDownButton =
+  document.querySelector<HTMLButtonElement>(
+    '#moveDownButton'
+  );
 
+const deleteButton =
+  document.querySelector<HTMLButtonElement>(
+    '#deleteButton'
+  );
+
+const saveButton =
+  document.querySelector<HTMLButtonElement>(
+    '#saveButton'
+  );
+
+const loadButton =
+  document.querySelector<HTMLButtonElement>(
+    '#loadButton'
+  );
+
+const saveStatus =
+  document.querySelector<HTMLParagraphElement>(
+    '#saveStatus'
+  );
+
+// Component selection
 function handleComponentSelect(component: WebsiteComponent): void {
   setSelectedComponentId(component.id);
 
@@ -44,18 +73,25 @@ function handleComponentSelect(component: WebsiteComponent): void {
   renderWebsite(websiteConfig, handleComponentSelect);
 }
 
+// Edit selected component
+componentTextInput?.addEventListener('input', () => {
+  const component = websiteConfig.components.find(
+    (item) => item.id === getSelectedComponentId()
+  );
 
+  if (!component) return;
+
+  component.text = componentTextInput.value;
+  renderWebsite(websiteConfig, handleComponentSelect);
+});
+
+// Change background color
 backgroundColorInput?.addEventListener('input', () => {
   websiteConfig.backgroundColor = backgroundColorInput.value;
   renderWebsite(websiteConfig, handleComponentSelect);
 });
 
-
-const addParagraphButton =
-  document.querySelector<HTMLButtonElement>(
-    '#addParagraphButton'
-  );
-
+// Add paragraph
 addParagraphButton?.addEventListener('click', () => {
   const newParagraph: WebsiteComponent = {
     id: crypto.randomUUID(),
@@ -64,39 +100,10 @@ addParagraphButton?.addEventListener('click', () => {
   };
 
   websiteConfig.components.push(newParagraph);
-
   renderWebsite(websiteConfig, handleComponentSelect);
 });
 
-
-componentTextInput?.addEventListener('input', () => {
-  const selectedComponent = websiteConfig.components.find(
-    (component) => component.id === getSelectedComponentId()
-  );
-
-  if (!selectedComponent) {
-    return;
-  }
-
-  selectedComponent.text = componentTextInput.value;
-
-  renderWebsite(websiteConfig, handleComponentSelect);
-});
-
-
-const moveUpButton = document.querySelector<HTMLButtonElement>(
-  '#moveUpButton'
-);
-
-const moveDownButton = document.querySelector<HTMLButtonElement>(
-  '#moveDownButton'
-);
-
-const deleteButton = document.querySelector<HTMLButtonElement>(
-  '#deleteButton'
-);
-
-// Move a component within the array
+// Move selected component
 function moveComponent(direction: -1 | 1): void {
   const index = websiteConfig.components.findIndex(
     (component) => component.id === getSelectedComponentId()
@@ -128,6 +135,7 @@ moveDownButton?.addEventListener('click', () => {
   moveComponent(1);
 });
 
+// Delete selected component
 deleteButton?.addEventListener('click', () => {
   websiteConfig.components = websiteConfig.components.filter(
     (component) => component.id !== getSelectedComponentId()
@@ -142,19 +150,7 @@ deleteButton?.addEventListener('click', () => {
   renderWebsite(websiteConfig, handleComponentSelect);
 });
 
-const saveButton = document.querySelector<HTMLButtonElement>(
-  '#saveButton'
-);
-
-const loadButton = document.querySelector<HTMLButtonElement>(
-  '#loadButton'
-);
-
-const saveStatus = document.querySelector<HTMLParagraphElement>(
-  '#saveStatus'
-);
-
-
+// Save design
 saveButton?.addEventListener('click', () => {
   try {
     saveDesign(websiteConfig);
@@ -169,6 +165,7 @@ saveButton?.addEventListener('click', () => {
   }
 });
 
+// Load design
 loadButton?.addEventListener('click', () => {
   try {
     const savedConfig = loadDesign();
@@ -205,4 +202,5 @@ loadButton?.addEventListener('click', () => {
   }
 });
 
+// Initial render
 renderWebsite(websiteConfig, handleComponentSelect);
