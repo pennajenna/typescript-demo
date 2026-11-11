@@ -11,10 +11,11 @@ import {
   setSelectedComponentId,
 } from './state';
 
+import { renderWebsite } from './renderer';
+
 const backgroundColorInput = document.querySelector<HTMLInputElement>(
   '#backgroundColorInput'
 );
-
 
 const componentEditor = document.querySelector<HTMLDivElement>(
   '#componentEditor'
@@ -26,56 +27,22 @@ const componentTextInput = document.querySelector<HTMLInputElement>(
 
 const preview = document.querySelector<HTMLDivElement>('#preview');
 
-function renderWebsite(config: WebsiteConfig): void {
-  if (!preview) return;
 
-  preview.replaceChildren();
-  preview.style.backgroundColor = config.backgroundColor;
+function handleComponentSelect(component: WebsiteComponent): void {
+  setSelectedComponentId(component.id);
 
-  config.components.forEach((component) => {
-    let element: HTMLElement;
+  if (componentEditor && componentTextInput) {
+    componentEditor.hidden = false;
+    componentTextInput.value = component.text;
+  }
 
-    switch (component.type) {
-      case 'heading':
-        element = document.createElement('h1');
-        break;
-
-      case 'paragraph':
-        element = document.createElement('p');
-        break;
-
-      case 'button':
-        element = document.createElement('button');
-        break;
-    }
-
-
-    element.textContent = component.text;
-    element.dataset.componentId = component.id;
-
-    if (component.id === getSelectedComponentId()) {
-      element.classList.add('selected-component');
-    }
-
-    element.addEventListener('click', () => {
-      setSelectedComponentId(component.id);
-
-      if (componentEditor && componentTextInput) {
-        componentEditor.hidden = false;
-        componentTextInput.value = component.text;
-      }
-
-      renderWebsite(websiteConfig);
-    });
-
-    preview.appendChild(element);
-
-  });
+  renderWebsite(websiteConfig, handleComponentSelect);
 }
+
 
 backgroundColorInput?.addEventListener('input', () => {
   websiteConfig.backgroundColor = backgroundColorInput.value;
-  renderWebsite(websiteConfig);
+  renderWebsite(websiteConfig, handleComponentSelect);
 });
 
 
@@ -93,7 +60,7 @@ addParagraphButton?.addEventListener('click', () => {
 
   websiteConfig.components.push(newParagraph);
 
-  renderWebsite(websiteConfig);
+  renderWebsite(websiteConfig, handleComponentSelect);
 });
 
 
@@ -108,7 +75,7 @@ componentTextInput?.addEventListener('input', () => {
 
   selectedComponent.text = componentTextInput.value;
 
-  renderWebsite(websiteConfig);
+  renderWebsite(websiteConfig, handleComponentSelect);
 });
 
 
@@ -145,7 +112,7 @@ function moveComponent(direction: -1 | 1): void {
 
   websiteConfig.components.splice(newIndex, 0, component);
 
-  renderWebsite(websiteConfig);
+  renderWebsite(websiteConfig, handleComponentSelect);
 }
 
 moveUpButton?.addEventListener('click', () => {
@@ -167,7 +134,7 @@ deleteButton?.addEventListener('click', () => {
     componentEditor.hidden = true;
   }
 
-  renderWebsite(websiteConfig);
+  renderWebsite(websiteConfig, handleComponentSelect);
 });
 
 const saveButton = document.querySelector<HTMLButtonElement>(
@@ -274,7 +241,7 @@ function loadDesign(): void {
       backgroundColorInput.value = websiteConfig.backgroundColor;
     }
 
-    renderWebsite(websiteConfig);
+    renderWebsite(websiteConfig, handleComponentSelect);
 
     if (saveStatus) {
       saveStatus.textContent = 'Design loaded successfully!';
@@ -290,4 +257,4 @@ saveButton?.addEventListener('click', saveDesign);
 loadButton?.addEventListener('click', loadDesign);
 
 
-renderWebsite(websiteConfig);
+renderWebsite(websiteConfig, handleComponentSelect);
