@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Webflow Designer</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body>
+  <header class="app-header">
+    <h1>Mini Webflow Designer</h1>
+  </header>
+
+  <main class="workspace">
+    <aside class="editor">
+      <h2>Page Settings</h2>
+
+      <label for="backgroundColorInput">
+        Background Color
+      </label>
+      <input id="backgroundColorInput" type="color" value="#ffffff" />
+
+      <h2>Components</h2>
+
+      <button id="addParagraphButton" class="editor-button">
+        + Add Paragraph
+      </button>
+
+
+      <div id="componentEditor" class="component-editor" hidden>
+        <h2>Edit Selected Component</h2>
+
+        <label for="componentTextInput">Component Text</label>
+        <input id="componentTextInput" type="text" />
+      </div>
+
+
+      <div class="component-actions">
+        <button id="moveUpButton" class="action-button">
+          ↑ Move Up
+        </button>
+
+        <button id="moveDownButton" class="action-button">
+          ↓ Move Down
+        </button>
+
+        <button id="deleteButton" class="action-button danger">
+          Delete Component
+        </button>
+      </div>
+
+      <div class="save-actions">
+        <h2>Project</h2>
+
+        <button id="saveButton" class="editor-button">
+          Save Design
+        </button>
+
+        <button id="loadButton" class="action-button">
+          Load Saved Design
+        </button>
+
+        <p id="saveStatus" role="status" aria-live="polite"></p>
+      </div>
+
+    </aside>
+
+    <section class="preview-panel">
+      <h2>Live Preview</h2>
+      <div id="preview"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
