@@ -1,0 +1,32 @@
+
+name: Webflow Designer CI
+
+"on":
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: TypeScript Build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: webflow-designer
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: webflow-designer/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check and build
+        run: npm run build
